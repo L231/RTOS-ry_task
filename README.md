@@ -11,10 +11,10 @@
 ## ry_task框图  
 ![系统框图](ry_task框图.png)  
 ## 文件结构  
-```
-ry_task  
-   │  ry_core.c       //核心  
-   │  ry_core.h  
+
+|ry_task  
+   │  >ry_core.c       //核心  
+   │  >ry_core.h  
    │  ry_hw.c         //硬件接口  
    │  ry_hw.h  
    │  ry_idle.c       //空闲任务  
@@ -33,7 +33,7 @@ ry_task
    └─cpu  
          ry_stack.c     //任务栈的初始化  
          ry_switch.s    //任务切换，目前适配了Cortex-M3  
-		 ```
+		 
 ---		 
 
 		 
