@@ -27,7 +27,7 @@ ry_task
    │  ry_timer.h  
    │  ry_list.h       //双向链表  
    │  ry_type.h       //内核的数据类型定义  
-   │  ry_conf.h       // 内核的配置文件  
+   │  ry_conf.h       //内核的配置文件  
    │  ry_lib.h        //内核的API接口  
    │  
    └─cpu  
@@ -35,5 +35,58 @@ ry_task
        ry_switch.s    //任务切换，目前适配了Cortex-M3  
 ```
 ---		 
+
+# 如何使用  
+## 这里以STM32F103举例  
+
+### 配置系统时基  
+```
+//ry_task内部采用嘀嗒定时器，弱定义了系统时基的配置函数
+__weak void ry_systick_cfg(void)
+{
+    RCC_ClocksTypeDef  mcu_clk;
+    RCC_GetClocksFreq(&mcu_clk);
+    SysTick_Config(mcu_clk.SYSCLK_Frequency / 1000000 * RY_TICK_PERIOD);
+}
+```
+### 配置串口，实现调试打印  
+```
+/* 初始化一个USART外设，如USART1 */
+
+/* 重定向 printf 函数 */
+int fputc(int ch, FILE *f)
+{
+    while((USARTx->SR & USART_FLAG_TXE) == RESET);
+    USARTx->DR = ch;
+    return ch;
+}
+```
+
+### 定义任务，运行ry_task  
+```
+static ry_task_t *task_uart_comm;
+
+static void task_uart_comm_func(void *p)
+{
+    uint32_t cnt = 0;
+    while(1)
+    {
+        cnt++;
+        TP_Printf("\r\n(%d)uart_send_data\r\n", cnt);
+        ry_task_delay(2000);
+    }
+}
+void main(void)
+{
+    ry_init();
+    task_uart_comm = ry_task_create("uart_comm",          /* 任务名字 */
+                                     task_uart_comm_func, /* 任务主体 */
+                                     0,                   /* 任务主体的形参 */
+                                     0,                   /* 优先级 */
+                                     10,                  /* 时间片 */
+                                     256);                /* 栈大小 */
+    ry_start();
+}
+```
 
 		 
