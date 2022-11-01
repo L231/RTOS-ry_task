@@ -64,6 +64,9 @@ int fputc(int ch, FILE *f)
 
 ### 定义任务，运行ry_task  
 ```
+#include <stdint.h>
+#include "ry_lib.h"
+
 static ry_task_t *task_uart_comm;
 
 static void task_uart_comm_func(void *p)
@@ -76,9 +79,11 @@ static void task_uart_comm_func(void *p)
         ry_task_delay(2000);
     }
 }
+
 void main(void)
 {
     ry_init();
+	/* 创建一个任务 */
     task_uart_comm = ry_task_create("uart_comm",          /* 任务名字 */
                                      task_uart_comm_func, /* 任务主体 */
                                      0,                   /* 任务主体的形参 */
