@@ -8,6 +8,7 @@
 设计开发参考了RT-Thread.  
 目前新增对微芯的**dsPIC33E**系列的支持。  
 
+*网盘下载地址：https://pan.baidu.com/s/1uoS-Xpm8JSPdkq5KYSMFFA?pwd=g1di*
 ---
 
 # 系统结构  
